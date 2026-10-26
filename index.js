@@ -1,12 +1,13 @@
 class Room {
-  constructor(classFunction) {
+  constructor(classFunction, options) {
     this.classFunction = classFunction;
+    this.options = options;
   }
 }
 
-function startFunction(isDeparture = true) {}
+function startFunction(option = "", isArrival = true) {}
 
-const startObject = new Room(startFunction());
+const startObject = new Room(startFunction(), ["cave", "flashlight"]);
 
 let gameField, inputField;
 
@@ -15,7 +16,15 @@ addEventListener("DOMContentLoaded", (event) => {
   inputField = document.getElementById("input-field");
 });
 
-let options = ["cave", "flashlight"];
 let currentLocation = startObject;
 
-function gameLoop() {}
+function gameLoop() {
+  let inputValue = inputField.value.toLowerCase();
+
+  if (!currentLocation.options.includes(inputValue)) {
+    gameField.innerHTML += `<br><br>Supplied option "${inputValue}" invalid.`;
+    inputField.value = "";
+  } else {
+    currentLocation.classFunction(inputValue);
+  }
+}
