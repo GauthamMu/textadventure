@@ -8,17 +8,17 @@ let startRoom, caveEntranceRoom;
 class Room {
   constructor(classFunction, options) {
     this.classFunction = classFunction;
-    this.options = options;
+    this.options = optionsFunction;
   }
 }
 
-function startFunction(option = "", flashlight = false) {
+function startFunction(option = "") {
   if (option == "cave") {
-    gameFieldText = caveEntranceFunction("cave", flashlight);
+    gameFieldText = caveEntranceFunction("cave");
   } else if (option == "flashlight") {
     flashlight = true;
     gameFieldText = `Shaking from frostbite, you flip the switch on the rustic torch you inherited from your great-great-grandfather, 
-          <br>who passed away while working a railway tunnel about a century ago. Or was it two?
+          <br>who passed away while working on a railway tunnel about a century ago. Or was it two?
           <br>The light flickers.
           <br>You can now see that there are partings between the trees in the West, in the North, and in the East.
           <br><br>Options: [west, north, east, cave]`;
@@ -40,17 +40,18 @@ function startFunction(option = "", flashlight = false) {
   return gameFieldText;
 }
 
-function caveEntranceFunction(option = "", flashlight = false) {
+function caveEntranceFunction(option = "") {
   if (option == "out") {
-    startFunction("out", flashlight);
+    gameFieldText = startFunction("out");
   } else if (option == "flashlight") {
     gameFieldText = `Despite you being in a rather cozy cave you shake from frostbit when you flip the switch on the rustic torch you inherited from your great-great-grandfather, 
-          <br>who passed away while working a railway tunnel about a century ago. Or was it two?
+          <br>who passed away while working on a railway tunnel about a century ago. Or was it two?
           <br>The light flickers.
           <br>You can now make out bits of the title of the booklet:
           <br>"T.e f..l.ng .ra.n."
           <br><br>Options: [out, booklet, candle]`;
-  } else if (!option == "cave") {
+  } else if (option == "candle") {
+    gameOverFunction((deathMsg = "candle"));
   } else if (option == "cave") {
     currentLocation = caveEntranceRoom;
     if (flashlight) {
@@ -65,17 +66,48 @@ function caveEntranceFunction(option = "", flashlight = false) {
           <br>Next to it lies a booklet. You can't make out its title, the tea light is too dim.
           <br><br>Options: [out, booklet, candle, flashlight]`;
     }
-    return gameFieldText;
+  }
+  return gameFieldText;
+}
+
+function gameOverFunction(option = "", deathMsg = "") {
+  if (option == "restart") {
+    location.reload();
+  } else if (deathMsg == "candle") {
+    currentLocation = gameOverRoom;
+    gameFieldText = `You walk up to the tea candle, and pick it up.
+        <br>But then, you freeze in place, just like if Medusa looked you straight in the eyes!
+        <br>Horror washes over you as you are, slowly but surely, engulfed in flames.
+        <br><br><b>GAME OVER</b>
+        <br><br>Options: [restart]`;
   }
 }
 
-startRoom = new Room(startFunction, ["cave", "flashlight"]);
-caveEntranceRoom = new Room(caveEntranceFunction, [
-  "out",
-  "booklet",
-  "candle",
-  "flashlight",
-]);
+function startOptions() {
+  if (flashlight) {
+    return ["west", "north", "east", "cave"];
+  } else {
+    return ["cave", "flashlight"];
+  }
+}
+
+function caveEntranceOptions() {
+  if (flashlight) {
+    return ["out, booklet, candle"];
+  } else {
+    return ["out, booklet, candle", "flashlight"];
+  }
+}
+
+function gameOverOptions() {
+  return ["restart"];
+}
+
+startRoom = new Room(startFunction, startOptions);
+
+caveEntranceRoom = new Room(caveEntranceFunction, caveEntranceOptions);
+
+gameOverRoom = new Room(gameOverFunction, gameOverOptions);
 
 addEventListener("DOMContentLoaded", (event) => {
   gameField = document.getElementById("game-field");
@@ -86,14 +118,15 @@ let currentLocation = startRoom;
 
 function gameLoop() {
   let inputValue = inputField.value.toLowerCase();
-  // If you entered something not in the Options of your current room
+  // If you entered nothing; likely a missclick
   if (inputValue == "") {
     return;
-  } else if (!currentLocation.options.includes(inputValue)) {
+    // If you entered something not in the Options of your current room
+  } else if (!currentLocation.options().includes(inputValue)) {
     gameField.innerHTML += `<br><br>Supplied option "${inputValue}" invalid.`;
     inputField.value = "";
   } else {
-    gameFieldText = currentLocation.classFunction(inputValue, flashlight);
+    gameFieldText = currentLocation.classFunction(inputValue);
 
     gameField.innerHTML = gameFieldText;
   }
