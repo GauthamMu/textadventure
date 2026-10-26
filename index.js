@@ -4,7 +4,6 @@ let gameFieldText = "";
 
 class Room {
   constructor(classFunction, options) {
-    console.log(typeof classFunction);
     this.classFunction = classFunction;
     this.options = options;
   }
@@ -30,8 +29,6 @@ function startFunction(option = "", isArrival = false, flashlight = false) {
     }
   }
 }
-
-console.log(typeof startFunction);
 
 const startObject = new Room(startFunction, ["cave", "flashlight"]);
 
