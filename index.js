@@ -13,7 +13,7 @@ class Room {
 function startFunction(option = "", isArrival = false, flashlight = false) {
   // If you're leaving the starting area
   if (!isArrival) {
-    if ((option = "cave")) {
+    if (option == "cave") {
       if (flashlight) {
         gameFieldText = `Flashlight in hand, you walk into the entrance area of the cave.
           <br>The faint shimmer comes from a little tea candle, someone must've lit it ahead of time.
