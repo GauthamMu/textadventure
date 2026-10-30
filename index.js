@@ -1,7 +1,6 @@
 let gameField, inputField, flashlight, booklet;
 // Variable for use in the Room classFunctions
 let gameFieldText = "";
-let itemsInHand = [];
 
 let startRoom, caveEntranceRoom;
 
