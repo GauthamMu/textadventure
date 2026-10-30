@@ -1,4 +1,4 @@
-let gameField, inputField, flashlight;
+let gameField, inputField, flashlight, booklet;
 // Variable for use in the Room classFunctions
 let gameFieldText = "";
 let itemsInHand = [];
@@ -59,9 +59,23 @@ function caveEntranceFunction(option = "") {
           <br><br>Options: [out, booklet, candle]`;
       break;
     case "booklet":
+      booklet = true;
+      if (flashlight) {
+        gameFieldText = `You reach your hand out to the cold leather shell of the booklet.
+          <br>It feels weighty in your hands.
+          <br>In the light of your flashlight, you now make out the entirety of the booklets' title:
+          <br>"The failing brain."
+          <br><br>Options: [out, candle, open]`;
+      } else {
+        gameFieldText = `You reach your hand out to the cold leather shell of the booklet.
+          <br>It feels weighty in your hands.
+          <br>In the faint light of the candle on the ground, you now make out the entirety of the bookets' title:
+          <br>"The failing brain."
+          <br><br>Options: [out, candle, flashlight, open]`;
+      }
       break;
     case "candle":
-      gameOverFunction((deathMsg = "candle"));
+      gameFieldText = gameOverFunction("candle");
       break;
     case "cave":
       currentLocation = caveEntranceRoom;
@@ -82,17 +96,21 @@ function caveEntranceFunction(option = "") {
   return gameFieldText;
 }
 
-function gameOverFunction(option = "", deathMsg = "") {
-  if (option == "restart") {
-    location.reload();
-  } else if (deathMsg == "candle") {
-    currentLocation = gameOverRoom;
-    gameFieldText = `You walk up to the tea candle, and pick it up.
+function gameOverFunction(option = "") {
+  switch (option) {
+    case "restart":
+      location.reload();
+      break;
+    case "candle":
+      currentLocation = gameOverRoom;
+      gameFieldText = `You walk up to the tea candle, and pick it up.
         <br>But then, you freeze in place, just like if Medusa looked you straight in the eyes!
         <br>Horror washes over you as you are, slowly but surely, engulfed in flames.
         <br><br><b>GAME OVER</b>
         <br><br>Options: [restart]`;
+      break;
   }
+  return gameFieldText;
 }
 
 function startOptions() {
@@ -105,9 +123,17 @@ function startOptions() {
 
 function caveEntranceOptions() {
   if (flashlight) {
-    return ["out", "booklet", "candle"];
+    if (booklet) {
+      return ["out", "candle", "open"];
+    } else {
+      return ["out", "booklet", "candle"];
+    }
   } else {
-    return ["out", "booklet", "candle", "flashlight"];
+    if (booklet) {
+      return ["out", "candle", "flashlight", "open"];
+    } else {
+      return ["out", "booklet", "candle", "flashlight"];
+    }
   }
 }
 
@@ -134,12 +160,14 @@ function gameLoop() {
   if (inputValue == "") {
     return;
     // If you entered something not in the Options of your current room
-  } else if (!currentLocation.options().includes(inputValue)) {
-    gameField.innerHTML += `<br><br>Supplied option "${inputValue}" invalid.`;
-    inputField.value = "";
   } else {
-    gameFieldText = currentLocation.classFunction(inputValue);
+    inputField.value = "";
+    if (!currentLocation.options().includes(inputValue)) {
+      gameField.innerHTML += `<br><br>Supplied option "${inputValue}" invalid.`;
+    } else {
+      gameFieldText = currentLocation.classFunction(inputValue);
 
-    gameField.innerHTML = gameFieldText;
+      gameField.innerHTML = gameFieldText;
+    }
   }
 }
