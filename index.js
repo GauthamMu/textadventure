@@ -8,7 +8,7 @@ let startRoom, caveEntranceRoom;
 class Room {
   constructor(classFunction, options) {
     this.classFunction = classFunction;
-    this.options = optionsFunction;
+    this.options = options;
   }
 }
 
@@ -44,6 +44,7 @@ function caveEntranceFunction(option = "") {
   if (option == "out") {
     gameFieldText = startFunction("out");
   } else if (option == "flashlight") {
+    flashlight = true;
     gameFieldText = `Despite you being in a rather cozy cave you shake from frostbit when you flip the switch on the rustic torch you inherited from your great-great-grandfather, 
           <br>who passed away while working on a railway tunnel about a century ago. Or was it two?
           <br>The light flickers.
@@ -93,9 +94,9 @@ function startOptions() {
 
 function caveEntranceOptions() {
   if (flashlight) {
-    return ["out, booklet, candle"];
+    return ["out", "booklet", "candle"];
   } else {
-    return ["out, booklet, candle", "flashlight"];
+    return ["out", "booklet", "candle", "flashlight"];
   }
 }
 
