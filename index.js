@@ -13,60 +13,71 @@ class Room {
 }
 
 function startFunction(option = "") {
-  if (option == "cave") {
-    gameFieldText = caveEntranceFunction("cave");
-  } else if (option == "flashlight") {
-    flashlight = true;
-    gameFieldText = `Shaking from frostbite, you flip the switch on the rustic torch you inherited from your great-great-grandfather, 
-          <br>who passed away while working on a railway tunnel about a century ago. Or was it two?
+  switch (option) {
+    case "cave":
+      gameFieldText = caveEntranceFunction("cave");
+      break;
+    case "flashlight":
+      flashlight = true;
+      gameFieldText = `Shaking from frostbite, you flip the switch on the rustic torch you inherited from your great-great-grandfather, 
+          <br>who passed away while working on a railway tunnel about a century ago. Or was it two centuries?
           <br>The light flickers.
           <br>You can now see that there are partings between the trees in the West, in the North, and in the East.
           <br><br>Options: [west, north, east, cave]`;
-  } else if (option == "out") {
-    currentLocation = startRoom;
-    if (flashlight) {
-      gameFieldText = `You are now back where you started, in a dark forest.
+      break;
+    case "out":
+      currentLocation = startRoom;
+      if (flashlight) {
+        gameFieldText = `You are now back where you started, in a dark forest.
           <br>You see light coming out of a cave.
           <br>You also see that there are partings between the trees in the West, in the North, and in the East.
           <br><br>Options: [west, north, east, cave]`;
-    } else {
-      gameFieldText = `You are now back where you started, in a dark forest.
+      } else {
+        gameFieldText = `You are now back where you started, in a dark forest.
           <br>You see light coming out of a cave.
           <br>Because it's so cold, you put your hands in your pockets.
           <br>You find a flashlight.
           <br><br>Options: [cave, flashlight]`;
-    }
+      }
+      break;
   }
   return gameFieldText;
 }
 
 function caveEntranceFunction(option = "") {
-  if (option == "out") {
-    gameFieldText = startFunction("out");
-  } else if (option == "flashlight") {
-    flashlight = true;
-    gameFieldText = `Despite you being in a rather cozy cave you shake from frostbit when you flip the switch on the rustic torch you inherited from your great-great-grandfather, 
-          <br>who passed away while working on a railway tunnel about a century ago. Or was it two?
+  switch (option) {
+    case "out":
+      gameFieldText = startFunction("out");
+      break;
+    case "flashlight":
+      flashlight = true;
+      gameFieldText = `Despite you being in a rather cozy cave you shake from frostbit when you flip the switch on the rustic torch you inherited from your great-great-grandfather, 
+          <br>who passed away while working on a railway tunnel about a century ago. Or was it two centuries?
           <br>The light flickers.
           <br>You can now make out bits of the title of the booklet:
           <br>"T.e f..l.ng .ra.n."
           <br><br>Options: [out, booklet, candle]`;
-  } else if (option == "candle") {
-    gameOverFunction((deathMsg = "candle"));
-  } else if (option == "cave") {
-    currentLocation = caveEntranceRoom;
-    if (flashlight) {
-      gameFieldText = `Flashlight in hand, you walk into the entrance area of the cave.
+      break;
+    case "booklet":
+      break;
+    case "candle":
+      gameOverFunction((deathMsg = "candle"));
+      break;
+    case "cave":
+      currentLocation = caveEntranceRoom;
+      if (flashlight) {
+        gameFieldText = `Flashlight in hand, you walk into the entrance area of the cave.
           <br>The faint shimmer comes from a little tea candle, someone must've lit it ahead of time.
           <br>Next to it lies a booklet. You can only make out bits of its title from where you're standing,
           <br>"T.e f..l.ng .ra.n."
           <br><br>Options: [out, booklet, candle]`;
-    } else {
-      gameFieldText = `You walk into the entrance area of the cave.
+      } else {
+        gameFieldText = `You walk into the entrance area of the cave.
           <br>The faint shimmer comes from a little tea candle, someone must've lit it ahead of time.
           <br>Next to it lies a booklet. You can't make out its title, the tea light is too dim.
           <br><br>Options: [out, booklet, candle, flashlight]`;
-    }
+      }
+      break;
   }
   return gameFieldText;
 }
