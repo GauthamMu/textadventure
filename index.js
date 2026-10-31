@@ -112,6 +112,16 @@ function gameOverFunction(option = "") {
   return gameFieldText;
 }
 
+function openBooklet() {
+  gameFieldText = `With shaking hands, you lift the leather-bound hardcover — and are immediately blown away.
+        <br>The handwriting is extremely intricate, like if the author – or authoress – had robbed a thousand hen of their feathers before picking the best one.
+        <br>The text goes as follows:
+        <br><i>Dear urban exploration
+        <br>
+        <br><br>Options: [restart]`;
+  return gameFieldText;
+}
+
 function startOptions() {
   if (flashlight) {
     return ["west", "north", "east", "cave"];
@@ -152,6 +162,8 @@ addEventListener("DOMContentLoaded", (event) => {
 });
 
 let currentLocation = startRoom;
+//There's no prev location yet, so just setting it to startRoom too
+let previousLocation = startRoom;
 
 function gameLoop() {
   let inputValue = inputField.value.toLowerCase();
@@ -164,6 +176,10 @@ function gameLoop() {
     if (!currentLocation.options().includes(inputValue)) {
       gameField.innerHTML += `<br><br>Supplied option "${inputValue}" invalid.`;
     } else {
+      // If booklet is opened
+      if (inputValue == "open") {
+        gameFieldText;
+      }
       gameFieldText = currentLocation.classFunction(inputValue);
 
       gameField.innerHTML = gameFieldText;
