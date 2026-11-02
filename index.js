@@ -129,7 +129,11 @@ function openBooklet() {
         <br>The text goes as follows:
         <br><i>Dear urban exploration
         <br>
-        <br><br>Options: [restart]`;
+        <br>This might be the last time I, Elizabeth W, ever use my hand again.
+        <br>I have barricaded the door for now, but it sounds like a werewolf is scratching against the heavy timber door
+            with the stolen strength of all of past victims.
+        <br>I might have to open this door, lest he breaks it and enters with full force, killing me in the process.
+        <br><br>Options: [turn]`;
   return gameFieldText;
 }
 
