@@ -39,6 +39,12 @@ function startFunction(option = "") {
           <br><br>Options: [cave, flashlight]`;
       }
       break;
+    default:
+      gameFieldText = `You are in a dark forest.
+          <br>You see light coming out of a cave.
+          <br>Because it's so cold, you put your hands in your pockets.
+          <br>You find a flashlight.
+          <br><br>Options: [cave, flashlight]`;
   }
   return gameFieldText;
 }
@@ -91,6 +97,11 @@ function caveEntranceFunction(option = "") {
           <br><br>Options: [out, booklet, candle, flashlight]`;
       }
       break;
+    default:
+      gameFieldText = `You're in the entrance area of the cave.
+          <br>The faint shimmer comes from a little tea candle, someone must've lit it ahead of time.
+          <br>Next to it lies a booklet. You can't make out its title, the tea light is too dim.
+          <br><br>Options: [out, booklet, candle, flashlight]`;
   }
   return gameFieldText;
 }
@@ -156,6 +167,8 @@ caveEntranceRoom = new Room(caveEntranceFunction, caveEntranceOptions);
 
 gameOverRoom = new Room(gameOverFunction, gameOverOptions);
 
+bookletRoom = new Room(openBooklet);
+
 addEventListener("DOMContentLoaded", (event) => {
   gameField = document.getElementById("game-field");
   inputField = document.getElementById("input-field");
@@ -178,6 +191,7 @@ function gameLoop() {
     } else {
       // If booklet is opened
       if (inputValue == "open") {
+        previousLocation = currentLocation;
         gameFieldText;
       }
       gameFieldText = currentLocation.classFunction(inputValue);
