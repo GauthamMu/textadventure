@@ -1,6 +1,8 @@
 let gameField, inputField, flashlight, booklet;
 // Variable for use in the Room classFunctions
 let gameFieldText = "";
+// Page of booklet, 0 indexed
+let bookletPage = 0;
 
 let startRoom, caveEntranceRoom;
 
@@ -56,7 +58,7 @@ function caveEntranceFunction(option = "") {
       break;
     case "flashlight":
       flashlight = true;
-      gameFieldText = `Despite you being in a rather cozy cave you shake from frostbit when you flip the switch on the rustic torch you inherited from your great-great-grandfather, 
+      gameFieldText = `Despite you being in a rather cozy cave you shake from frostbite when you flip the switch on the rustic torch you inherited from your great-great-grandfather, 
           <br>who passed away while working on a railway tunnel about a century ago. Or was it two centuries?
           <br>The light flickers.
           <br>You can now make out bits of the title of the booklet:
@@ -124,16 +126,33 @@ function gameOverFunction(option = "") {
 }
 
 function openBooklet() {
-  gameFieldText = `With shaking hands, you lift the leather-bound hardcover — and are immediately blown away.
-        <br>The handwriting is extremely intricate, like if the author – or authoress – had robbed a thousand hen of their feathers before picking the best one.
+  switch (bookletPage) {
+    case 0:
+      gameFieldText = `With shaking hands, you lift the leather-bound hardcover — and are immediately blown away.
+        <br>The handwriting is extremely intricate, like if the author – or authoress – had robbed a thousand hens of their feathers before picking the best one.
         <br>The text goes as follows:
         <br><i>Dear urban exploration
         <br>
         <br>This might be the last time I, Elizabeth W, ever use my hand again.
         <br>I have barricaded the door for now, but it sounds like a werewolf is scratching against the heavy timber door
-            with the stolen strength of all of past victims.
+            with the stolen strength of all of its past victims.
         <br>I might have to open this door, lest he breaks it and enters with full force, killing me in the process.
-        <br><br>Options: [turn]`;
+        <br>
+        <br>But let me introduce myself first. I am Elizabeth from Leicester. I like trains.
+        <br>OH SHIT THE WOLF'S INSID-</i>
+        <br>The rest of the page is filled with splattered ink and blood.
+        <br><br>Options: [turn, close]`;
+      break;
+    case 1:
+      gameFieldText = `The horror of the first page having embedded itself in your veins and bones simultaneously,
+            you turn the page.
+        <br>The intricate handwriting of the first page has given way to a messy, perhaps frantic, scribble.
+        <br>With the drastic change in text size, a lot less text fits on this page compared to the last:
+        <br><i style="font-size: 2rem">OMG THIS HURTSSSSSS
+        <br>I'M LITERALLY BEING RIPPED APART!!!!!</i>
+        <br>This page, analogue to the last one, is footed by bloody spots.
+        <br><br>Options: [close]`;
+  }
   return gameFieldText;
 }
 
