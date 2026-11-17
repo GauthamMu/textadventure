@@ -1,5 +1,7 @@
 # Text Adventure
 
+![Screenshot](Screenshot.png)
+
 Welcome to my Text Adventure.
 
 ## Why a Text Adventure?
@@ -9,5 +11,5 @@ I wanted to learn how to make one in the browser. I've played some before, but t
 
 ## Future features
 
-- Navigation by typing "North", "East", "South" or "West" in an input field
-- Somewhat of a Story (hopefully)
+- Navigation by typing "North", "East", "South" or "West" in an input field (Done using AI)
+- Somewhat of a Story (hopefully) (nvm it's a lost cause at this point)
