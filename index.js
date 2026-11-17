@@ -4,7 +4,7 @@ let gameFieldText = "";
 // Page of booklet, 0 indexed
 let bookletPage = 0;
 
-let startRoom, caveEntranceRoom;
+let startRoom, caveEntranceRoom, gameOverRoom, bookletRoom, winRoom;
 
 class Room {
   constructor(classFunction, options) {
@@ -15,6 +15,13 @@ class Room {
 
 function startFunction(option = "") {
   switch (option) {
+    case "west":
+    case "north":
+      gameFieldText = winFunction(option);
+      break;
+    case "east":
+      gameFieldText = gameOverFunction("wolf");
+      break;
     case "cave":
       gameFieldText = caveEntranceFunction("cave");
       break;
@@ -100,10 +107,7 @@ function caveEntranceFunction(option = "") {
       }
       break;
     default:
-      gameFieldText = `You're in the entrance area of the cave.
-          <br>The faint shimmer comes from a little tea candle, someone must've lit it ahead of time.
-          <br>Next to it lies a booklet. You can't make out its title, the tea light is too dim.
-          <br><br>Options: [out, booklet, candle, flashlight]`;
+      gameFieldText = caveEntranceFunction("cave");
   }
   return gameFieldText;
 }
@@ -121,11 +125,50 @@ function gameOverFunction(option = "") {
         <br><br><b>GAME OVER</b>
         <br><br>Options: [restart]`;
       break;
+    case "wolf":
+      currentLocation = gameOverRoom;
+      gameFieldText = `You take the eastern parting. The trees thin out, and something in the undergrowth stands up on two legs — or maybe four, it happens too fast.
+        <br>There's a flash of red, and a voice you almost recognise from the booklet: "I told you not to come."
+        <br><br><b>GAME OVER</b>
+        <br><br>Options: [restart]`;
+      break;
   }
   return gameFieldText;
 }
 
-function openBooklet() {
+function winFunction(option = "") {
+  switch (option) {
+    case "restart":
+      location.reload();
+      break;
+    case "west":
+      currentLocation = winRoom;
+      gameFieldText = `You head west. The trees give way to an old embankment, and beyond it, a lit window in a station house.
+        <br>You don't look back at the cave.
+        <br><br><b>You made it out.</b>
+        <br><br>Options: [restart]`;
+      break;
+    case "north":
+      currentLocation = winRoom;
+      gameFieldText = `You head north. The cold thins, and the sound of a railway line carries over the ridge — a train, right on time, with room in every carriage.
+        <br>Whatever was in the booklet stays in the booklet.
+        <br><br><b>You made it out.</b>
+        <br><br>Options: [restart]`;
+      break;
+  }
+  return gameFieldText;
+}
+
+function openBooklet(option = "") {
+  if (option === "turn") {
+    bookletPage++;
+  } else if (option === "close") {
+    bookletPage = 0;
+    currentLocation = previousLocation;
+    gameFieldText = currentLocation.classFunction();
+    return gameFieldText;
+  }
+
   switch (bookletPage) {
     case 0:
       gameFieldText = `With shaking hands, you lift the leather-bound hardcover — and are immediately blown away.
@@ -151,7 +194,17 @@ function openBooklet() {
         <br><i style="font-size: 2rem">OMG THIS HURTSSSSSS
         <br>I'M LITERALLY BEING RIPPED APART!!!!!</i>
         <br>This page, analogue to the last one, is footed by bloody spots.
+        <br><br>Options: [turn, close]`;
+      break;
+    case 2:
+      gameFieldText = `A third page, stuck to the second with something dark and tacky.
+        <br>The handwriting has steadied again — careful, almost polite, like someone copying a letter they memorised:
+        <br><i>Folk around here call me Red Wolf. The name fits the coat and the temper.
+        <br>The men who drove the railway through these woods used to leave candles in the cave mouths so their children could find their way home after dark. I've been following one of those candles for years.
+        <br>I'm headed east, through the last parting in the trees. Come that way only if you're tired of having a tomorrow.
+        <br>— R.W.</i>
         <br><br>Options: [close]`;
+      break;
   }
   return gameFieldText;
 }
@@ -180,7 +233,19 @@ function caveEntranceOptions() {
   }
 }
 
+function bookletOptions() {
+  if (bookletPage < 2) {
+    return ["turn", "close"];
+  } else {
+    return ["close"];
+  }
+}
+
 function gameOverOptions() {
+  return ["restart"];
+}
+
+function winOptions() {
   return ["restart"];
 }
 
@@ -190,7 +255,9 @@ caveEntranceRoom = new Room(caveEntranceFunction, caveEntranceOptions);
 
 gameOverRoom = new Room(gameOverFunction, gameOverOptions);
 
-bookletRoom = new Room(openBooklet);
+bookletRoom = new Room(openBooklet, bookletOptions);
+
+winRoom = new Room(winFunction, winOptions);
 
 addEventListener("DOMContentLoaded", (event) => {
   gameField = document.getElementById("game-field");
@@ -202,7 +269,7 @@ let currentLocation = startRoom;
 let previousLocation = startRoom;
 
 function gameLoop() {
-  let inputValue = inputField.value.toLowerCase();
+  let inputValue = inputField.value.toLowerCase().trim();
   // If you entered nothing; likely a missclick
   if (inputValue == "") {
     return;
@@ -215,9 +282,11 @@ function gameLoop() {
       // If booklet is opened
       if (inputValue == "open") {
         previousLocation = currentLocation;
-        gameFieldText;
+        currentLocation = bookletRoom;
+        gameFieldText = openBooklet();
+      } else {
+        gameFieldText = currentLocation.classFunction(inputValue);
       }
-      gameFieldText = currentLocation.classFunction(inputValue);
 
       gameField.innerHTML = gameFieldText;
     }
